@@ -10,8 +10,9 @@ public static class DefaultConfiguration
         services.Configure<RestApiSettings>(configuration!.GetSection(nameof(RestApiSettings)));
         services.Configure<HttpClientSettings>(configuration.GetSection(nameof(HttpClientSettings)));
 
-        services.AddSingleton<IProductsService, ProductsService>();
-        
+        services.AddScoped<IProductsService, ProductsService>();
+        services.AddScoped<ICategoriesService, CategoriesService>();
+
         return services;
     }
 }

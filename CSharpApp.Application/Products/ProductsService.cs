@@ -1,30 +1,44 @@
+using System.Net.Http.Json;
+
 namespace CSharpApp.Application.Products;
 
-public class ProductsService : IProductsService
+public class ProductsService(
+    HttpClient httpClient,
+    ILogger<ProductsService> logger
+) : IProductsService
 {
-    private readonly HttpClient _httpClient;
-    private readonly RestApiSettings _restApiSettings;
-    private readonly ILogger<ProductsService> _logger;
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly ILogger<ProductsService> _logger = logger;
 
-    public ProductsService(IOptions<RestApiSettings> restApiSettings,
-        ILogger<ProductsService> logger)
+    public async Task<Product?> GetProductById(int id)
     {
-        _httpClient = new HttpClient();
-        _restApiSettings = restApiSettings.Value;
-        _logger = logger;
+        try
+        {
+            var response = await _httpClient.GetAsync($"products/{id}");
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadFromJsonAsync<Product?>();
+
+            _logger.LogInformation("Fetched product with ID: {Id}, Result: {@Result}", id, result);
+            return result;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            _logger.LogWarning("Product with ID: {Id} not found", id);
+
+            return null;
+        }
     }
 
-    public async Task<IReadOnlyCollection<Product>> GetProducts()
+    public async Task<IEnumerable<Product>> GetProducts()
     {
-        _httpClient.BaseAddress = new Uri(_restApiSettings.BaseUrl!);
-        var response = await _httpClient.GetAsync(_restApiSettings.Products);
+        var response = await _httpClient.GetAsync("products");
+
         response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-        var res = JsonSerializer.Deserialize<List<Product>>(content);
-        foreach (var _ in res)
-        {
-            _logger.LogInformation($"Fetched : {res.Count} number of products");
-        }
-        return res.AsReadOnly();
+
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<Product>>();
+
+        _logger.LogInformation("Fetched : {Count} number of products", result?.Count() ?? 0);
+        return result ?? [];
     }
 }
