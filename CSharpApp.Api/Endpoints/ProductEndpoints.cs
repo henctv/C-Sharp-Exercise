@@ -31,19 +31,19 @@ public static class ProductEndpoints
             .Produces(StatusCodes.Status502BadGateway);
     }
 
-    private static async Task<IResult> GetProducts(IProductsService productsService)
+    public static async Task<IResult> GetProducts(IProductsService productsService)
     {
         var products = await productsService.GetProducts();
         return Results.Ok(products);
     }
 
-    private static async Task<IResult> GetProductById(int id, IProductsService productsService)
+    public static async Task<IResult> GetProductById(int id, IProductsService productsService)
     {
         var product = await productsService.GetProductById(id);
         return product is not null ? Results.Ok(product) : Results.NotFound();
     }
 
-    private static async Task<IResult> CreateProduct(
+    public static async Task<IResult> CreateProduct(
         HttpContext httpContext,
         CreateProductDto createProduct,
         IValidator<CreateProductDto> validator,
@@ -60,7 +60,7 @@ public static class ProductEndpoints
         return product switch
         {
             ProductDto => Results.Created($"api/v{version}/products/{product.Id}", product),
-            null => Results.Problem("Failed to create product.", statusCode: StatusCodes.Status502BadGateway)
+            null => Results.Problem("Failed to create product.", statusCode: StatusCodes.Status500InternalServerError)
         };
     }
 }

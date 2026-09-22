@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CSharpApp.Application\CSharpApp.Application.csproj" />
+    <ProjectReference Include="..\CSharpApp.Api\CSharpApp.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

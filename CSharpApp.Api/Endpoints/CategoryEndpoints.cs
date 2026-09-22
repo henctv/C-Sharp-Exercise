@@ -17,7 +17,7 @@ public static class CategoryEndpoints
             .Produces<IEnumerable<CategoryDto>>();
     }
 
-    private static async Task<IResult> GetCategories(ICategoriesService categoriesService)
+    public static async Task<IResult> GetCategories(ICategoriesService categoriesService)
     {
         var categories = await categoriesService.GetCategories();
 
