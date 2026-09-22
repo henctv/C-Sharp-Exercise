@@ -1,3 +1,6 @@
+using CSharpApp.Core.Dtos;
+using FluentValidation;
+
 namespace CSharpApp.Infrastructure.Configuration;
 
 public static class DefaultConfiguration
@@ -10,8 +13,7 @@ public static class DefaultConfiguration
         services.Configure<RestApiSettings>(configuration!.GetSection(nameof(RestApiSettings)));
         services.Configure<HttpClientSettings>(configuration.GetSection(nameof(HttpClientSettings)));
 
-        services.AddScoped<IProductsService, ProductsService>();
-        services.AddScoped<ICategoriesService, CategoriesService>();
+        services.AddScoped<IValidator<CreateProductDto>, CreateProductDtoValidator>();
 
         return services;
     }

@@ -2,7 +2,9 @@ namespace CSharpApp.Core.Interfaces;
 
 public interface IProductsService
 {
-    Task<Product?> GetProductById(int id);
+    Task<ProductDto?> GetProductById(int id);
 
-    Task<IEnumerable<Product>> GetProducts();
+    Task<IEnumerable<ProductDto>> GetProducts();
+
+    Task<ProductDto?> CreateProduct(CreateProductDto createProduct);
 }

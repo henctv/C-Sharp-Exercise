@@ -8,6 +8,8 @@ This is a web application that interacts with a 3nd party service (<https://fake
 
 We have to do some code refactoring and implement some new features
 
+https://api.escuelajs.co/docs - swagger doc
+
 ## Code refactoring
 
 Seems that the use of http client is not so much efficient

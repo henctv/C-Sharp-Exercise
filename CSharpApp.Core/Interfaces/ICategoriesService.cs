@@ -2,5 +2,5 @@ namespace CSharpApp.Core.Interfaces;
 
 public interface ICategoriesService
 {
-    Task<IEnumerable<Category>> GetCategories();
+    Task<IEnumerable<CategoryDto>> GetCategories();
 }
